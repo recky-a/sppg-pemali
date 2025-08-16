@@ -1,6 +1,6 @@
 import { InsertStatisticData, statisticData } from '@/db/schema';
 import { dbClient } from '@/lib/db';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import 'server-only';
 
 export async function all() {
@@ -25,6 +25,16 @@ export async function update(data: InsertStatisticData) {
       .update(statisticData)
       .set(data)
       .where(eq(statisticData.id, data.id!));
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function remove(ids: number[]) {
+  try {
+    return await dbClient
+      .delete(statisticData)
+      .where(inArray(statisticData.id, ids));
   } catch (error) {
     throw error;
   }

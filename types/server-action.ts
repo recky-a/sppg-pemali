@@ -1,5 +1,5 @@
 export interface ActionResponse<TData = void> {
   success: boolean;
-  data?: TData | TData[];
+  data?: TData;
   message?: string;
 }

@@ -1,6 +1,6 @@
 'use server';
 
-import { all, create, update } from '@/data/statistic-data';
+import { all, create, remove, update } from '@/data/statistic-data';
 import { InsertStatisticData, SelectStatisticData } from '@/db/schema';
 import { auth } from '@/lib/auth';
 import { ActionResponse } from '@/types/server-action';
@@ -18,7 +18,7 @@ async function getAll(): Promise<ActionResponse<SelectStatisticData[]>> {
   try {
     const data = await all();
     return { success: true, data: data };
-  } catch (error) {
+  } catch {
     return { success: false, message: 'Gagal memuat data statistik' };
   }
 }
@@ -31,7 +31,7 @@ async function newStatisticData(
     await create(values);
     revalidatePath('/back-office/data');
     return { success: true, message: 'Berhasil menambahkan data statistik' };
-  } catch (error) {
+  } catch {
     return { success: false, message: 'Gagal menambahkan data statistik' };
   }
 }
@@ -50,4 +50,15 @@ async function updateStatisticData(
   }
 }
 
-export { getAll, newStatisticData, updateStatisticData };
+async function deleteStatisticData(ids: number[]): Promise<ActionResponse> {
+  try {
+    await checkLogin();
+    await remove(ids);
+    revalidatePath('/back-office/data');
+    return { success: true, message: 'Berhasil menghapus data statistik' };
+  } catch {
+    return { success: false, message: 'Gagal menghapus data statistik' };
+  }
+}
+
+export { deleteStatisticData, getAll, newStatisticData, updateStatisticData };

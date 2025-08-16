@@ -33,7 +33,7 @@ export function DataTablePagination<TData>({
           <p className="text-sm font-medium">Baris per halaman</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
-            onValueChange={(value: any) => {
+            onValueChange={(value: string) => {
               table.setPageSize(Number(value));
             }}
           >

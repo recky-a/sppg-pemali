@@ -8,6 +8,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
+import { deleteStatisticData } from '@/app/actions/statistic-data.action';
 import { DataTableColumnHeader } from '@/components/data-table-column-header';
 import { DataTablePagination } from '@/components/data-table-pagination';
 import { DataTableViewOptions } from '@/components/data-table-view-options';
@@ -24,8 +25,10 @@ import {
 import { SelectStatisticData } from '@/db/schema';
 import { Edit2, Eye, Plus, Trash } from 'lucide-react';
 import { useMemo, useTransition } from 'react';
+import { toast } from 'sonner';
 import { Actions, useActionDialogStore } from './action-dialog';
 import { FormCreate, FormEdit } from './forms';
+import { DetailView } from './view-dialog';
 
 // Simple date formatter
 function formatDate(date: Date | string | null) {
@@ -38,7 +41,7 @@ function formatDate(date: Date | string | null) {
   });
 }
 
-function DataTable({ data }: any) {
+function DataTable({ data }: { data: SelectStatisticData[] }) {
   const colHelper = createColumnHelper<SelectStatisticData>();
   const columns = useMemo(
     () => [
@@ -235,17 +238,17 @@ function DataTableToolbar<T>({ table }: DataTableToolbarProps<T>) {
 
   const handleDelete = () => {
     startDeleteTransition(async () => {
-      // This logic now supports bulk deletion.
-      // You would pass an array of IDs to your server action.
-      // const idsToDelete = table.getSelectedRowModel().rows.map(row => (row.original as SelectStatisticData).id);
-      // const { success, message } = await deleteStatistics(idsToDelete);
-      //
-      // if (success) {
-      //   toast.success(message);
-      //   setTimeout(() => setOpenAction(false), 411);
-      // } else {
-      //   toast.error(message);
-      // }
+      const idsToDelete = table
+        .getSelectedRowModel()
+        .rows.map((row) => (row.original as SelectStatisticData).id);
+      const { success, message } = await deleteStatisticData(idsToDelete);
+
+      if (success) {
+        toast.success(message);
+        setTimeout(() => setOpenAction(false), 411);
+      } else {
+        toast.error(message);
+      }
     });
   };
 
@@ -270,7 +273,11 @@ function DataTableToolbar<T>({ table }: DataTableToolbarProps<T>) {
       case 'view':
         if (selectedRow) {
           setOpenAction('view');
-          // setContent(<DetailView statistic={selectedRow as SelectStatisticData} />);
+          setContent(
+            <DetailView
+              statistic={selectedRow as unknown as SelectStatisticData}
+            />
+          );
         }
         break;
       case 'delete':
