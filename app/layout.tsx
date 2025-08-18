@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body
-        className={`${plusJakartaSans.variable} ${geistMono.variable} antialiased`}
+        className={`${plusJakartaSans.variable} ${geistMono.variable} min-h-[100dvh] antialiased`}
       >
         {children}
       </body>
