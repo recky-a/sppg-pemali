@@ -43,7 +43,7 @@ interface StatisticDataViewProps {
 // slide 1
 function FullLogoPage() {
   return (
-    <div className="relative flex h-[100dvh] w-screen items-center justify-center overflow-hidden bg-white">
+    <div className="bg-slide-radial relative flex h-[100dvh] w-screen items-center justify-center overflow-hidden">
       <Image src={logo} alt="logo" className="mx-auto size-80 h-fit" />
     </div>
   );
@@ -52,8 +52,8 @@ function FullLogoPage() {
 // slide 2
 function FullHeadingPage() {
   return (
-    <div className="relative flex h-[100dvh] w-screen items-center-safe justify-center-safe overflow-hidden bg-white">
-      <h1 className="text-center text-5xl font-bold">
+    <div className="bg-slide-radial relative flex h-[100dvh] w-screen items-center-safe justify-center-safe overflow-hidden">
+      <h1 className="text-center text-5xl font-bold text-white">
         Yayasan Same - Same Berkah
       </h1>
       <Image
@@ -73,7 +73,7 @@ function StatisticDataView({ data }: StatisticDataViewProps) {
   const { id, createdAt, updatedAt, ...stats } = data[0];
 
   return (
-    <div className="relative h-[100dvh] w-screen overflow-hidden">
+    <div className="bg-slide-radial relative h-[100dvh] w-screen overflow-hidden">
       <h1 className="text-primary-foreground absolute top-0 mt-5 w-full text-center text-3xl font-bold capitalize">
         data statistik satuan pelayanan pemenuhan gizi
       </h1>
