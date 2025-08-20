@@ -3,11 +3,12 @@
 import Autoplay from 'embla-carousel-autoplay';
 import Fade from 'embla-carousel-fade';
 import { Pause, Play } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { buttonVariants } from '@/components/ui/button';
 import {
   Carousel,
+  CarouselApi,
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
@@ -19,7 +20,9 @@ interface FullPageCarouselProps {
 }
 
 export function FullPageCarousel({ items }: FullPageCarouselProps) {
+  const [api, setApi] = useState<CarouselApi>();
   const [isPlaying, setIsPlaying] = useState(true);
+
   const autoplayRef = useRef(
     Autoplay({
       delay: 3500,
@@ -28,15 +31,42 @@ export function FullPageCarousel({ items }: FullPageCarouselProps) {
     })
   );
 
-  const togglePlayPause = () => {
-    if (isPlaying) {
-      autoplayRef.current.stop();
-      setIsPlaying(false);
+  // This useCallback function is still correct for controlling play/pause
+  const togglePlayPause = useCallback(() => {
+    const autoplay = api?.plugins().autoplay;
+    if (!autoplay) return;
+
+    if (autoplay.isPlaying()) {
+      autoplay.stop();
     } else {
-      autoplayRef.current.play();
-      setIsPlaying(true);
+      autoplay.play();
     }
-  };
+  }, [api]);
+
+  // THIS IS THE CORRECTED PART
+  useEffect(() => {
+    if (!api) return;
+
+    // Get the autoplay instance to check the initial state
+    const autoplay = api.plugins().autoplay;
+    if (!autoplay) return;
+    setIsPlaying(autoplay.isPlaying());
+
+    // Define listener functions
+    const onPlay = () => setIsPlaying(true);
+    const onStop = () => setIsPlaying(false);
+
+    // CORRECTED: Listen for events on the main 'api' object
+    // using the 'autoplay:play' and 'autoplay:stop' event names.
+    api.on('autoplay:play', onPlay);
+    api.on('autoplay:stop', onStop);
+
+    // Cleanup listeners on component unmount
+    return () => {
+      api.off('autoplay:play', onPlay);
+      api.off('autoplay:stop', onStop);
+    };
+  }, [api]);
 
   return (
     <main
@@ -48,6 +78,7 @@ export function FullPageCarousel({ items }: FullPageCarouselProps) {
       }}
     >
       <Carousel
+        setApi={setApi}
         opts={{ loop: true, align: 'start' }}
         plugins={[autoplayRef.current, Fade()]}
         className="h-[100dvh] w-screen"
@@ -87,7 +118,7 @@ export function FullPageCarousel({ items }: FullPageCarouselProps) {
         onClick={togglePlayPause}
         className={cn(
           buttonVariants(),
-          'fixed bottom-6 left-6 z-50 flex h-12 w-12 items-center justify-center rounded-full backdrop-blur-sm transition-all duration-200 hover:scale-105 focus:ring-2 focus:outline-none'
+          'fixed bottom-6 left-6 z-50 flex h-12 w-12 items-center justify-center rounded-full backdrop-blur-sm transition-all duration-200 hover:scale-105 focus:outline-none'
         )}
         aria-label={isPlaying ? 'Pause slideshow' : 'Play slideshow'}
       >
