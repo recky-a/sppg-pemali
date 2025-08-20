@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { SelectStatisticData } from '@/db/schema';
 import karakterSVG from '@/public/karakter.svg';
 import logo from '@/public/logo-bgn.png';
-import WavePattern from '@/public/wave_pattern.svg';
 import {
   faPersonBreastfeeding,
   faPersonPregnant,
@@ -73,17 +72,16 @@ function StatisticDataView({ data }: StatisticDataViewProps) {
   const { id, createdAt, updatedAt, ...stats } = data[0];
 
   return (
-    <div className="bg-slide-radial relative h-[100dvh] w-screen overflow-hidden">
-      
-       
-     
-      <Image src={WavePattern} alt="wave pattern svg" className="-mt-5" />
+    <div className="bg-slide-radial relative flex h-[100dvh] w-screen flex-col overflow-hidden">
+      <h1 className="text-primary-foreground mt-16 w-full text-center text-4xl font-bold capitalize">
+        data statistik satuan pelayanan pemenuhan gizi
+      </h1>
       <Image
         src={logo}
         alt="logo"
         className="absolute top-5 right-10 size-28"
       />
-      <div className="container mx-auto -mt-10 grid size-full auto-rows-min grid-cols-3 gap-7">
+      <div className="container mx-auto grid h-full flex-1 auto-rows-min grid-cols-3 content-center gap-7">
         {Object.entries(stats).map(([k, v], i) => (
           <Card
             key={k}
