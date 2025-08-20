@@ -74,9 +74,9 @@ function StatisticDataView({ data }: StatisticDataViewProps) {
 
   return (
     <div className="bg-slide-radial relative h-[100dvh] w-screen overflow-hidden">
-      <h1 className="text-primary-foreground absolute top-0 mt-5 w-full text-center text-3xl font-bold capitalize">
-        data statistik satuan pelayanan pemenuhan gizi
-      </h1>
+      
+       
+     
       <Image src={WavePattern} alt="wave pattern svg" className="-mt-5" />
       <Image
         src={logo}
