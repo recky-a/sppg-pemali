@@ -1,3 +1,9 @@
+## 0.5.0 (2025-08-20)
+
+### Feat
+
+- add bg gradient radial to the homepage slides
+
 ## 0.4.0 (2025-08-18)
 
 ### Feat
